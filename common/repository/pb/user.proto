@@ -1,0 +1,109 @@
+syntax  = "proto3";
+
+import "enum.proto";
+
+package pb;
+
+
+
+// RegisterDeviceReq 注册设备请求
+message RegisterDeviceReq {
+    int32 type = 2;
+    string brand = 3;
+    string model  = 4;
+    string system_version = 5;
+    string sdk_version =6;
+}
+
+message RegisterDeviceResp {
+    int64  device_id = 1;
+}
+
+// SendMessageReq 发送消息请求
+message SendMessageReq {
+    ReceiverType receiver_type = 1;
+    int64 receiver_id = 2;
+    repeated int64 to_user_ids = 3;
+    MessageType message_type = 4;
+    bytes message_content = 5;
+    int64 send_time = 6;
+    bool is_persist = 7;
+}
+
+// SendMessageResp 发送消息响应
+message SendMessageResp{
+    int64 seq = 1;
+}
+
+
+// ConnUserLoginReq 登录 请求
+message ConnUserLoginReq {
+      int64 device_id = 1; // 设备id
+      int64 user_id = 2; // 用户id
+      string token = 3; // token
+      string conn_addr = 4; // 服务器地址
+      int64 conn_fd = 5; // TCP对应的文件描述符
+      string client_addr = 6; // 客户端地址
+}
+
+// ConnUserLoginResp 登录响应
+message ConnUserLoginResp{
+
+}
+
+// OfflineReq 下线请求
+message OfflineReq {
+    int64 user_id = 1; // 用户id
+    int64 device_id = 2; // 设备id
+    string client_addr = 3; // 客户端地址
+}
+
+// OfflineResp 下线响应
+message OfflineResp {
+
+}
+
+// GetDeviceReq 获取设备请求
+message GetDeviceReq {
+    int64 device_id = 1;
+}
+
+// GetDeviceResp 获取设备响应
+message GetDeviceResp {
+    Device device = 1;
+}
+
+// Device 设备
+message Device {
+    int64 device_id = 1; // 设备id
+    int64 user_id = 2; // 用户id
+    int32 Type = 3; // 设备类型,1:Android；2：IOS；3：Windows; 4：MacOS；5：Web
+    string Brand = 4; // 手机厂商
+    string Model = 5; // 机型
+    string SystemVersion = 6; // 系统版本
+    string SDKVersion = 7; // SDK版本
+    int32 Status = 8; // 在线状态，0：不在线；1：在线
+    int64 Created = 9; // 创建时间
+    int64 Updated = 10; // 更新时间
+}
+
+
+
+service UserRPC {
+
+    // RegisterDevice 注册设备
+    rpc RegisterDevice (RegisterDeviceReq) returns (RegisterDeviceResp);
+
+    // SendMessage 发送消息
+    rpc SendMessage (SendMessageReq) returns (SendMessageResp);
+
+    // ConnUserLogin 连接登录
+    rpc ConnUserLogin (ConnUserLoginReq) returns (ConnUserLoginResp);
+
+    // Offline 设备离线
+    rpc Offline (OfflineReq) returns (OfflineResp);
+
+    // GetDevice 获取设备
+    rpc GetDevice (GetDeviceReq) returns (GetDeviceResp);
+
+}

@@ -1,0 +1,30 @@
+# 目录下的所有文件
+node_modules/
+.idea/
+test/
+.vscode/
+dist/
+build/
+vendor/
+logs/
+.sass-cache/
+
+
+# macos/linux bin
+
+
+# 文件
+*.exe
+*.exe~
+*.log
+*.sum
+*.http
+*.dat
+
+/src/Logic-Service/Logic-Service
+/src/Connect-Service/Connect-Service
+
+
+
+# macos
+.DS_Store

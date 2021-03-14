@@ -1,0 +1,153 @@
+syntax  = "proto3";
+import "enum.proto";
+import "user.proto";
+
+package pb;
+
+// Sender 发送者
+message Sender {
+    SenderType sender_type = 1;
+    int64 sender_id = 2;
+    string avatar = 3;
+    string nickname  = 4;
+}
+
+// 消息
+message Message {
+    Sender sender = 1;
+    ReceiverType receiver_type = 2;
+    int64 receiver_id = 3;
+    repeated int64 to_user_ids = 4;
+    MessageType message_type = 5;
+    bytes message_content = 6;
+    int64 seq = 7;
+    int64 send_time  = 8;
+    MessageStatus status = 9;
+}
+
+// 消息投递
+message MessageSend {
+    Message message = 1;
+}
+
+
+
+
+// 上行数据
+message Input {
+    PackageType type = 1;
+    int64 request_id = 2;
+    bytes data = 3;
+}
+
+// 下行数据
+message Output{
+    PackageType type = 1;
+    int64 request_id = 2;
+    sint64 code = 3;
+    string message = 4;
+    bytes data = 5;
+}
+
+// 设备登录
+message SignInInput {
+    int64 device_id  = 1;
+    int64 user_id = 2;
+    string token = 3;
+}
+
+// 消息同步上行
+message SyncInput {
+    int64 seq = 1;
+}
+
+// 消息同步响应
+message SyncOutput {
+    repeated Message messages = 1; // 消息列表
+    bool has_more = 2; // 是否有更多数据
+}
+
+// MessageACK 投递回执
+message MessageACK {
+    int64 device_ack = 2;  // 设备收到消息的确认号
+    int64 receive_time = 3;  // 消息接收时间
+}
+
+
+
+// SyncReq 同步消息请求
+message SyncReq {
+    int64 user_id = 1; // 用户id
+    int64 device_id = 2; // 设备id
+    int64 seq = 3; // 客户端已经同步的序列号
+}
+
+// SyncResp 同步消息响应
+message SyncResp {
+    repeated Message messages = 1; // 消息列表
+    bool has_more = 2; // 是否有更多数据
+}
+
+
+// MessageACKReq 消息回执请求
+message MessageACKReq {
+    int64 user_id = 1; // 用户id
+    int64 device_id = 2; // 设备id
+    int64 device_ack = 3; // 设备收到消息的确认号
+    int64 receive_time = 4; // 消息接收时间戳，精确到毫秒
+}
+
+// MessageACKResp 消息架势响应
+message MessageACKResp {
+
+}
+
+service MessageRPC {
+
+    // SendMessage 发送消息
+    rpc SendMessage(SendMessageReq) returns (SendMessageResp);
+
+    // Sync 消息同步
+    rpc Sync (SyncReq) returns (SyncResp);
+
+    // MessageACK 设备收到消息回执
+    rpc MessageACK (MessageACKReq) returns (MessageACKResp);
+
+
+}
+
+
+
+message Text{
+    string text = 1;
+}
+
+
+message Face {
+    string face_id = 1;
+    string face_url = 2;
+}
+
+
+message Voice {
+    string id = 1;
+    sint64 size = 2;
+    sint64 duration = 3;
+    sint64 url = 4;
+}
+
+message Image {
+    string id = 1;
+    sint64 width = 2;
+    sint64 height = 3;
+    string url = 4;
+    string thumbnail_url = 5;
+}
+
+message File {
+    int64 id = 1;
+    string name = 2;
+    sint64 size = 3;
+    string url = 4;
+}
+

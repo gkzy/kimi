@@ -1,0 +1,26 @@
+syntax  = "proto3";
+
+import "message.proto";
+
+package pb;
+
+
+// DeliverMessageReq 投递消息的请求体
+message DeliverMessageReq {
+    int64 device_id = 1;
+    int64 fd = 2;
+    MessageSend message_send = 3; //数据
+}
+
+// DeliverMessageResp 投递消息的响应
+message DeliverMessageResp{
+
+}
+
+
+service ConnMessage {
+
+    // DeliverMessage 消息投递
+    rpc DeliverMessage (DeliverMessageReq) returns (DeliverMessageResp);
+
+ }
